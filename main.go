@@ -10,6 +10,12 @@ import (
 
 const httpAddr = ":8080"
 
+func healthHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+}
+
 func main() {
 	fmt.Println("Starting server on", httpAddr)
 
@@ -17,10 +23,4 @@ func main() {
 	srv.GET("/health", healthHandler)
 
 	log.Fatal(srv.Run(httpAddr))
-}
-
-func healthHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
-	})
 }
