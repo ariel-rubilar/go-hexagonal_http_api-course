@@ -1,28 +1,15 @@
 package bootstrap
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server"
 )
 
-const httpAddr = ":8080"
-
-func healthHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
-	})
-}
+const (
+	host = "localhost"
+	port = 8080
+)
 
 func Run() error {
-	fmt.Println("Starting server on", httpAddr)
-
-	srv := gin.New()
-	srv.GET("/health", healthHandler)
-
-	log.Fatal(srv.Run(httpAddr))
-
-	return nil
+	srv := server.New(host, port)
+	return srv.Run()
 }
