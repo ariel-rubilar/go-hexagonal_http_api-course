@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence"
+	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
 	"github.com/gin-gonic/gin"
@@ -16,12 +16,15 @@ type Server interface {
 type api struct {
 	httpAddr string
 	engine   *gin.Engine
+
+	courseRepository mooc.CourseRepository
 }
 
-func New(host string, port int) Server {
+func New(host string, port int, cr mooc.CourseRepository) Server {
 	api := &api{
-		httpAddr: fmt.Sprintf("%s:%d", host, port),
-		engine:   gin.New(),
+		httpAddr:         fmt.Sprintf("%s:%d", host, port),
+		engine:           gin.New(),
+		courseRepository: cr,
 	}
 
 	api.registerRoutes()
@@ -35,8 +38,6 @@ func (a *api) Run() error {
 
 func (a *api) registerRoutes() {
 
-	courseRepository := persistence.NewCourseRepository()
-
 	a.engine.GET("/health", health.CheckHandler())
-	a.engine.POST("/courses", courses.CreateCourse(courseRepository))
+	a.engine.POST("/courses", courses.CreateCourse(a.courseRepository))
 }
