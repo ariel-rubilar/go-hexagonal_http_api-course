@@ -12,24 +12,25 @@ type Server interface {
 }
 
 type api struct {
-	host string
-	port int
+	httpAddr string
+	engine   *gin.Engine
 }
 
 func New(host string, port int) Server {
-	return &api{
-		host: host,
-		port: port,
+	api := &api{
+		httpAddr: fmt.Sprintf("%s:%d", host, port),
+		engine:   gin.New(),
 	}
+
+	api.registerRoutes()
+	return api
 }
 
 func (a *api) Run() error {
-	httpAddr := fmt.Sprintf("%s:%d", a.host, a.port)
+	fmt.Println("Starting server on", a.httpAddr)
+	return a.engine.Run(a.httpAddr)
+}
 
-	fmt.Println("Starting server on", httpAddr)
-
-	srv := gin.New()
-	srv.GET("/health", health.Handler)
-
-	return srv.Run(httpAddr)
+func (a *api) registerRoutes() {
+	a.engine.GET("/health", health.Handler)
 }
