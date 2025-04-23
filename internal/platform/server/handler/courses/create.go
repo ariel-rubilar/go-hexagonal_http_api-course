@@ -3,6 +3,8 @@ package courses
 import (
 	"net/http"
 
+	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persitence"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +22,21 @@ func CreateCourse() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
-		ctx.Status(http.StatusCreated)
+
+		course := mooc.NewCourse(req.ID, req.Name, req.Duration)
+		repo := persitence.NewCourseRepository()
+		if err := repo.Save(course); err != nil {
+			ctx.JSON(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, gin.H{
+			"message": "Course created successfully",
+			"data": gin.H{
+				"id":       course.ID(),
+				"name":     course.Name(),
+				"duration": course.Duration(),
+			},
+		})
 	}
 }
