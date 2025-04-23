@@ -1,4 +1,4 @@
-package main
+package bootstrap
 
 import (
 	"fmt"
@@ -16,11 +16,13 @@ func healthHandler(c *gin.Context) {
 	})
 }
 
-func main() {
+func Run() error {
 	fmt.Println("Starting server on", httpAddr)
 
 	srv := gin.New()
 	srv.GET("/health", healthHandler)
 
 	log.Fatal(srv.Run(httpAddr))
+
+	return nil
 }

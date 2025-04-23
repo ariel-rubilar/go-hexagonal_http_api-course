@@ -1,4 +1,4 @@
-module github.com/ArielRubilar/go-hexagonal_http_api-course
+module github.com/ariel-rubilar/go-hexagonal_http_api-course
 
 go 1.24.2
 
