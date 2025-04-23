@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
 	"github.com/gin-gonic/gin"
 )
@@ -32,5 +33,6 @@ func (a *api) Run() error {
 }
 
 func (a *api) registerRoutes() {
-	a.engine.GET("/health", health.Handler)
+	a.engine.GET("/health", health.CheckHandler())
+	a.engine.POST("/courses", courses.CreateCourse())
 }

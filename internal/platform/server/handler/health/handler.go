@@ -6,9 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Handler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status":  "ok",
-		"version": "1.0.0",
-	})
+func CheckHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "ok",
+			"version": "1.0.0",
+		})
+	}
 }
