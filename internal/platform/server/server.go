@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,9 @@ func (a *api) Run() error {
 }
 
 func (a *api) registerRoutes() {
+
+	courseRepository := persistence.NewCourseRepository()
+
 	a.engine.GET("/health", health.CheckHandler())
-	a.engine.POST("/courses", courses.CreateCourse())
+	a.engine.POST("/courses", courses.CreateCourse(courseRepository))
 }

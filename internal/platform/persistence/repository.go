@@ -1,13 +1,11 @@
-package persitence
+package persistence
 
 import (
+	"context"
+
 	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
 	"github.com/hyperioxx/memsql"
 )
-
-type CourseRepository interface {
-	Save(course *mooc.Course) error
-}
 
 var (
 	tableName = "courses"
@@ -17,7 +15,7 @@ type courseRepository struct {
 	db *memsql.Database
 }
 
-func NewCourseRepository() CourseRepository {
+func NewCourseRepository() mooc.CourseRepository {
 	db := memsql.NewDatabase()
 
 	db.CreateTable(tableName, []*memsql.Column{
@@ -39,7 +37,7 @@ func NewCourseRepository() CourseRepository {
 	}
 }
 
-func (c *courseRepository) Save(course *mooc.Course) error {
+func (c *courseRepository) Save(ctx context.Context, course *mooc.Course) error {
 
 	values := map[string]any{
 		"id":       course.ID(),
