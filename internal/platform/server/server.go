@@ -39,5 +39,5 @@ func (a *api) Run() error {
 func (a *api) registerRoutes() {
 
 	a.engine.GET("/health", health.CheckHandler())
-	a.engine.POST("/courses", courses.CreateCourse(a.courseRepository))
+	a.engine.POST("/courses", courses.CreateHandler(a.courseRepository))
 }
