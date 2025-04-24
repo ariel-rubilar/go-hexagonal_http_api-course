@@ -3,7 +3,7 @@ package mooc
 type Course struct {
 	id       CourseID
 	name     CourseName
-	duration string
+	duration CourseDuration
 }
 
 func NewCourse(id, name, duration string) (*Course, error) {
@@ -19,10 +19,16 @@ func NewCourse(id, name, duration string) (*Course, error) {
 		return nil, err
 	}
 
+	courseDuration, err := NewCourseDuration(duration)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &Course{
 		id:       courseID,
 		name:     courseName,
-		duration: duration,
+		duration: courseDuration,
 	}, nil
 }
 
@@ -34,6 +40,6 @@ func (c *Course) Name() CourseName {
 	return c.name
 }
 
-func (c *Course) Duration() string {
+func (c *Course) Duration() CourseDuration {
 	return c.duration
 }
