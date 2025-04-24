@@ -18,7 +18,7 @@ import (
 func TestHandler_Create(t *testing.T) {
 
 	courseRepository := new(mocks.CourseRepositoryMock)
-	courseRepository.On("Create", mock.Anything, mock.AnythingOfType("mooc.Course")).Return(nil)
+	courseRepository.On("Save", mock.Anything, mock.AnythingOfType("*mooc.Course")).Return(nil)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
@@ -46,6 +46,30 @@ func TestHandler_Create(t *testing.T) {
 		defer res.Body.Close()
 
 		assert.Equal(t, res.StatusCode, w.Code)
+	})
+
+	t.Run("Given valid request it return 201", func(t *testing.T) {
+		createRequest := &courses.CreateRequest{
+			ID:       "course-id",
+			Name:     "Course Name",
+			Duration: "3 months",
+		}
+
+		json, err := json.Marshal(createRequest)
+
+		require.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodPost, "/courses", bytes.NewBuffer(json))
+
+		require.NoError(t, err)
+
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+
+		res := w.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, res.StatusCode, http.StatusCreated)
 	})
 
 }

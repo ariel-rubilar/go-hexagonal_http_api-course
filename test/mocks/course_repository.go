@@ -13,10 +13,8 @@ type CourseRepositoryMock struct {
 
 func (m *CourseRepositoryMock) Save(ctx context.Context, course *mooc.Course) error {
 	args := m.Called(ctx, course)
-
-	if args.Get(0) != nil {
-		return args.Get(0).(error)
+	if args.Get(0) == nil {
+		return nil
 	}
-
-	return nil
+	return args.Get(0).(error)
 }
