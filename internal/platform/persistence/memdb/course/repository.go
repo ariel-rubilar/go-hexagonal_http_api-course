@@ -3,7 +3,7 @@ package course
 import (
 	"context"
 
-	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb"
 	"github.com/hyperioxx/memsql"
 )

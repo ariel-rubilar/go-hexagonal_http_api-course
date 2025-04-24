@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/stretchr/testify/mock"
 )
 

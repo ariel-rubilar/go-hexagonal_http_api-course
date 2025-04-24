@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 
-	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
 	"github.com/gin-gonic/gin"

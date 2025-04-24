@@ -3,7 +3,7 @@ package courses
 import (
 	"net/http"
 
-	mooc "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/gin-gonic/gin"
 )
 
