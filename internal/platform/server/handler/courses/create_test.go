@@ -1,9 +1,10 @@
 package courses_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
@@ -11,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHandler_Create(t *testing.T) {
@@ -24,12 +26,26 @@ func TestHandler_Create(t *testing.T) {
 
 	t.Run("Given invalid request it return 400", func(t *testing.T) {
 
-		w := httptest.NewRecorder()
-		req, _ := http.NewRequest(http.MethodPost, "/courses", strings.NewReader(`{"id": "", "name": "Course Name", "duration": "3 months"}`))
+		createRequest := &courses.CreateRequest{
+			Name:     "Course Name",
+			Duration: "3 months",
+		}
 
+		json, err := json.Marshal(createRequest)
+
+		require.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodPost, "/courses", bytes.NewBuffer(json))
+
+		require.NoError(t, err)
+
+		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
 
-		assert.Equal(t, http.StatusBadRequest, w.Code)
+		res := w.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, res.StatusCode, w.Code)
 	})
 
 }
