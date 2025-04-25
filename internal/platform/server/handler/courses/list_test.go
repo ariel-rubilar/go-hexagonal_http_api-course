@@ -27,7 +27,7 @@ func TestHandler_List(t *testing.T) {
 
 	t.Run("return 200", func(t *testing.T) {
 
-		courseRepository.On("ListAll", mock.Anything).Return(make([]mooc.Course, 0), nil)
+		courseRepository.On("ListAll", mock.Anything).Return(make([]*mooc.Course, 0), nil)
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 
@@ -64,8 +64,9 @@ func TestHandler_List(t *testing.T) {
 
 		res := w.Result()
 
-		var body []byte
-		body, _ = io.ReadAll(res.Body)
+		body, err := io.ReadAll(res.Body)
+
+		require.NoError(t, err)
 
 		defer res.Body.Close()
 
@@ -76,7 +77,7 @@ func TestHandler_List(t *testing.T) {
 
 		assert.Equal(t, response.Data[0].ID, coursesModel[0].ID().String())
 
-		assert.Equal(t, res.StatusCode, http.StatusOK)
+		assert.Equal(t, len(response.Data), 1)
 	})
 
 }
