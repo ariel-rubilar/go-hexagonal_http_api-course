@@ -19,11 +19,15 @@ func TestCourseService_Create_Fail(t *testing.T) {
 	courseService := course.NewCourseService(mockCourseRepository)
 
 	t.Run("if course repository fails should return error", func(t *testing.T) {
-		mockCourseRepository.On("Save", mock.Anything, mock.Anything).Return(errors.New("error"))
 
 		id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "Go Programming", "3 months"
 
-		_, err := courseService.Create(context.Background(), id, name, duration)
+		course, err := mooc.NewCourse(id, name, duration)
+		require.NoError(t, err)
+
+		mockCourseRepository.On("Save", mock.Anything, course).Return(errors.New("error")).Once()
+
+		_, err = courseService.Create(context.Background(), id, name, duration)
 
 		mockCourseRepository.AssertExpectations(t)
 		assert.Error(t, err)
@@ -32,10 +36,12 @@ func TestCourseService_Create_Fail(t *testing.T) {
 	t.Run("if new course fails should return error", func(t *testing.T) {
 
 		id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "", "3 months"
+		course, err := mooc.NewCourse(id, name, duration)
+		require.Error(t, err)
 
-		_, err := courseService.Create(context.Background(), id, name, duration)
+		_, err = courseService.Create(context.Background(), id, name, duration)
 
-		mockCourseRepository.AssertNotCalled(t, "Save", mock.Anything, mock.Anything)
+		mockCourseRepository.AssertNotCalled(t, "Save", mock.Anything, course)
 		assert.Error(t, err)
 	})
 }
