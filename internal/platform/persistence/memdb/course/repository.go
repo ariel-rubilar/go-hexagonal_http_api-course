@@ -29,7 +29,7 @@ func (c *courseRepository) Save(ctx context.Context, course *mooc.Course) error 
 	}
 
 	if err := c.db.InsertRow(memdb.CourseTableName, values); err != nil {
-		return err
+		return fmt.Errorf("error inserting course: %v", err)
 	}
 
 	return nil
@@ -40,9 +40,11 @@ func (c *courseRepository) ListAll(ctx context.Context) ([]*mooc.Course, error) 
 	courses := []*mooc.Course{}
 
 	rows, err := c.db.List(memdb.CourseTableName)
+
 	if err != nil {
-		return nil, fmt.Errorf("error listing courses: %w", err)
+		return nil, fmt.Errorf("error listing courses: %v", err)
 	}
+
 	for _, row := range rows {
 
 		course, err := mooc.NewCourse(
@@ -51,7 +53,7 @@ func (c *courseRepository) ListAll(ctx context.Context) ([]*mooc.Course, error) 
 			row["duration"].(string),
 		)
 		if err != nil {
-			return nil, fmt.Errorf("error creating course: %w", err)
+			return nil, fmt.Errorf("error creating course: %v", err)
 		}
 		courses = append(courses, course)
 	}
