@@ -37,9 +37,9 @@ func CreateHandler(courseRepository mooc.CourseRepository) gin.HandlerFunc {
 		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "Course created successfully",
 			"data": gin.H{
-				"id":       course.ID(),
-				"name":     course.Name(),
-				"duration": course.Duration(),
+				"id":       course.ID().String(),
+				"name":     course.Name().String(),
+				"duration": course.Duration().String(),
 			},
 		})
 	}
