@@ -10,13 +10,19 @@ type CourseName struct {
 }
 
 var (
-	ErrInvalidCourseName = errors.New("invalid course name")
+	ErrEmptyCourseName  = errors.New("invalid course name")
+	ErrLengthCourseName = errors.New("course name must be between 3 and 100 characters")
 )
 
 func NewCourseName(value string) (CourseName, error) {
 	if value == "" {
-		return CourseName{}, fmt.Errorf("%w: %s", ErrInvalidCourseName, value)
+		return CourseName{}, fmt.Errorf("%w: %s", ErrEmptyCourseName, value)
 	}
+
+	if len(value) < 3 || len(value) > 100 {
+		return CourseName{}, fmt.Errorf("%w: %s", ErrLengthCourseName, value)
+	}
+
 	return CourseName{value: value}, nil
 }
 

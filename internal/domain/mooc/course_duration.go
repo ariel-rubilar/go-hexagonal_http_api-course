@@ -10,12 +10,12 @@ type CourseDuration struct {
 }
 
 var (
-	ErrInvalidCourseDuration = errors.New("invalid course name")
+	ErrInvalidCourseDuration = errors.New("invalid course duration")
 )
 
 func NewCourseDuration(value string) (CourseDuration, error) {
 	if value == "" {
-		return CourseDuration{}, fmt.Errorf("%w: %s", ErrInvalidCourseName, value)
+		return CourseDuration{}, fmt.Errorf("%w: %s", ErrInvalidCourseDuration, value)
 	}
 	return CourseDuration{value: value}, nil
 }
