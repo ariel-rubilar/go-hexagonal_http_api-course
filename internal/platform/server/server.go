@@ -40,4 +40,5 @@ func (a *api) registerRoutes() {
 
 	a.engine.GET("/health", health.CheckHandler())
 	a.engine.POST("/courses", courses.CreateHandler(a.courseRepository))
+	a.engine.GET("/courses", courses.ListHandler(a.courseRepository))
 }
