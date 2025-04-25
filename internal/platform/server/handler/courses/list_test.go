@@ -19,15 +19,15 @@ import (
 
 func TestHandler_List(t *testing.T) {
 
-	courseRepository := new(mocks.CourseRepositoryMock)
+	courseService := new(mocks.CourseServiceMock)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.GET("/courses", courses.ListHandler(courseRepository))
+	r.GET("/courses", courses.ListHandler(courseService))
 
 	t.Run("return 200", func(t *testing.T) {
 
-		courseRepository.On("ListAll", mock.Anything).Return(make([]*mooc.Course, 0), nil)
+		courseService.On("ListAll", mock.Anything).Return(nil, nil).Once()
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 
@@ -53,7 +53,7 @@ func TestHandler_List(t *testing.T) {
 		require.NoError(t, err)
 		coursesModel[0] = course
 
-		courseRepository.On("ListAll", mock.Anything).Return(coursesModel, nil)
+		courseService.On("ListAll", mock.Anything).Return(coursesModel, nil)
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 

@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/test/mocks"
 	"github.com/gin-gonic/gin"
@@ -17,12 +18,11 @@ import (
 
 func TestHandler_Create(t *testing.T) {
 
-	courseRepository := new(mocks.CourseRepositoryMock)
-	courseRepository.On("Save", mock.Anything, mock.AnythingOfType("*mooc.Course")).Return(nil)
+	courseService := new(mocks.CourseServiceMock)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.POST("/courses", courses.CreateHandler(courseRepository))
+	r.POST("/courses", courses.CreateHandler(courseService))
 
 	t.Run("Given invalid request it return 400", func(t *testing.T) {
 
@@ -50,10 +50,14 @@ func TestHandler_Create(t *testing.T) {
 
 	t.Run("Given invalid  id request it return 400", func(t *testing.T) {
 
+		id, name, duration := "invalid-id", "Course Name", "3 months"
+
+		courseService.On("Create", mock.Anything, id, name, duration).Return(nil, mooc.ErrInvalidCourseID)
+
 		createRequest := &courses.CreateRequest{
-			Name:     "Course Name",
-			Duration: "3 months",
-			ID:       "invalid-id",
+			ID:       id,
+			Name:     name,
+			Duration: duration,
 		}
 
 		json, err := json.Marshal(createRequest)
@@ -74,10 +78,15 @@ func TestHandler_Create(t *testing.T) {
 	})
 
 	t.Run("Given valid request it return 201", func(t *testing.T) {
+
+		id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "Course Name", "3 months"
+		course, err := mooc.NewCourse(id, name, duration)
+		require.NoError(t, err)
+		courseService.On("Create", mock.Anything, id, name, duration).Return(course, nil)
 		createRequest := &courses.CreateRequest{
-			ID:       "123e4567-e89b-12d3-a456-426614174000",
-			Name:     "Course Name",
-			Duration: "3 months",
+			ID:       id,
+			Name:     name,
+			Duration: duration,
 		}
 
 		json, err := json.Marshal(createRequest)

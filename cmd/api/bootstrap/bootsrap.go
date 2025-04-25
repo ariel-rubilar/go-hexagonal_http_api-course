@@ -3,8 +3,9 @@ package bootstrap
 import (
 	"fmt"
 
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb"
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb/course"
+	courseRepo "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server"
 )
 
@@ -18,8 +19,10 @@ func Run() error {
 	if err != nil {
 		return fmt.Errorf("error creating memsql: %w", err)
 	}
-	courseRepository := course.NewCourseRepository(db)
+	courseRepository := courseRepo.NewCourseRepository(db)
 
-	srv := server.New(host, port, courseRepository)
+	courseService := course.NewCourseService(courseRepository)
+
+	srv := server.New(host, port, courseService)
 	return srv.Run()
 }

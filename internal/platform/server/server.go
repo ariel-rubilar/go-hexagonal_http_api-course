@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
 	"github.com/gin-gonic/gin"
@@ -17,14 +17,14 @@ type api struct {
 	httpAddr string
 	engine   *gin.Engine
 
-	courseRepository mooc.CourseRepository
+	courseService course.CourseService
 }
 
-func New(host string, port int, cr mooc.CourseRepository) Server {
+func New(host string, port int, s course.CourseService) Server {
 	api := &api{
-		httpAddr:         fmt.Sprintf("%s:%d", host, port),
-		engine:           gin.New(),
-		courseRepository: cr,
+		httpAddr:      fmt.Sprintf("%s:%d", host, port),
+		engine:        gin.New(),
+		courseService: s,
 	}
 
 	api.registerRoutes()
@@ -39,6 +39,6 @@ func (a *api) Run() error {
 func (a *api) registerRoutes() {
 
 	a.engine.GET("/health", health.CheckHandler())
-	a.engine.POST("/courses", courses.CreateHandler(a.courseRepository))
-	a.engine.GET("/courses", courses.ListHandler(a.courseRepository))
+	a.engine.POST("/courses", courses.CreateHandler(a.courseService))
+	a.engine.GET("/courses", courses.ListHandler(a.courseService))
 }

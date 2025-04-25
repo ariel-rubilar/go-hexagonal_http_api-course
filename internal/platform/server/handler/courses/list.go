@@ -3,7 +3,7 @@ package courses
 import (
 	"net/http"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,10 +18,10 @@ type ListResponse struct {
 	Message string           `json:"message"`
 }
 
-func ListHandler(courseRepository mooc.CourseRepository) gin.HandlerFunc {
+func ListHandler(service course.CourseListAll) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		courses, err := courseRepository.ListAll(ctx)
+		courses, err := service.ListAll(ctx)
 
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err.Error())
