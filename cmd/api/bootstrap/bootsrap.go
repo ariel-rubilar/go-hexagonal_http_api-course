@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/bus/inmemory"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb"
 	courseRepo "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server"
@@ -23,6 +24,11 @@ func Run() error {
 
 	courseService := course.NewCourseService(courseRepository)
 
-	srv := server.New(host, port, courseService)
+	commandBus := inmemory.New()
+
+	commandBus.Register(course.CreateCourseCommandType, course.NewCreateCourseCommandHandler(courseService))
+	commandBus.Register(course.ListCoursesCommandType, course.NewListCoursesCommandHandler(courseService))
+
+	srv := server.New(host, port, courseService, commandBus)
 	return srv.Run()
 }

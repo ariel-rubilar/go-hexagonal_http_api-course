@@ -13,10 +13,10 @@ type HandlerMock struct {
 
 var _ command.Handler = (*HandlerMock)(nil)
 
-func (m *HandlerMock) Handle(ctx context.Context, cmd command.Command) error {
+func (m *HandlerMock) Handle(ctx context.Context, cmd command.Command) (any, error) {
 	args := m.Called(ctx, cmd)
-	if args.Get(0) != nil {
-		return args.Get(0).(error)
+	if args.Get(1) != nil {
+		return nil, args.Get(1).(error)
 	}
-	return nil
+	return args.Get(0), nil
 }

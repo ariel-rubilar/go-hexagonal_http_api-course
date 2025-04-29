@@ -2,11 +2,11 @@ package courses
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/command"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +16,7 @@ type CreateRequest struct {
 	Duration string `json:"duration" binding:"required"`
 }
 
-func CreateHandler(service course.CourseCreate) gin.HandlerFunc {
+func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req CreateRequest
 
@@ -25,9 +25,17 @@ func CreateHandler(service course.CourseCreate) gin.HandlerFunc {
 			return
 		}
 
-		c, err := service.Create(ctx, req.ID, req.Name, req.Duration)
+		r, err := commandBus.Dispatch(ctx, course.NewCreateCourseCommand(req.ID, req.Name, req.Duration))
 
-		fmt.Printf("err: %v\n", err)
+		c, ok := r.(*mooc.Course)
+
+		if !ok {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Invalid course type",
+			})
+			return
+		}
+
 		if err != nil {
 
 			switch {

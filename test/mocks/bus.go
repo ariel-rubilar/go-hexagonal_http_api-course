@@ -13,12 +13,12 @@ type BuseMock struct {
 
 var _ command.Bus = (*BuseMock)(nil)
 
-func (m *BuseMock) Dispatch(ctx context.Context, cmd command.Command) error {
+func (m *BuseMock) Dispatch(ctx context.Context, cmd command.Command) (any, error) {
 	args := m.Called(ctx, cmd)
-	if args.Get(0) != nil {
-		return args.Get(0).(error)
+	if args.Get(1) != nil {
+		return nil, args.Get(1).(error)
 	}
-	return nil
+	return args.Get(0), nil
 }
 
 func (m *BuseMock) Register(t command.Type, h command.Handler) {

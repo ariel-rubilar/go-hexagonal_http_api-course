@@ -18,10 +18,10 @@ func New() *CommandBus {
 	}
 }
 
-func (b *CommandBus) Dispatch(ctx context.Context, cmd command.Command) error {
+func (b *CommandBus) Dispatch(ctx context.Context, cmd command.Command) (any, error) {
 	handler, ok := b.handlers[cmd.Type()]
 	if !ok {
-		return nil
+		return nil, nil
 	}
 
 	return handler.Handle(ctx, cmd)

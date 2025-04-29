@@ -9,10 +9,10 @@ type Command interface {
 }
 
 type Handler interface {
-	Handle(context.Context, Command) error
+	Handle(context.Context, Command) (any, error)
 }
 
 type Bus interface {
-	Dispatch(context.Context, Command) error
+	Dispatch(context.Context, Command) (any, error)
 	Register(Type, Handler)
 }

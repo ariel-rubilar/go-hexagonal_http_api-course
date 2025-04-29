@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/command"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,10 +20,19 @@ type ListResponse struct {
 	Message string           `json:"message"`
 }
 
-func ListHandler(service course.CourseListAll) gin.HandlerFunc {
+func ListHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		courses, err := service.ListAll(ctx)
+		r, err := commandBus.Dispatch(ctx, course.NewListCoursesCommand())
+
+		courses, ok := r.([]*mooc.Course)
+
+		if !ok {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Invalid course type",
+			})
+			return
+		}
 
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err.Error())

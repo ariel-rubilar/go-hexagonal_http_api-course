@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/test/mocks"
@@ -18,11 +19,11 @@ import (
 
 func TestHandler_Create(t *testing.T) {
 
-	courseService := new(mocks.CourseServiceMock)
+	bus := new(mocks.BuseMock)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.POST("/courses", courses.CreateHandler(courseService))
+	r.POST("/courses", courses.CreateHandler(bus))
 
 	t.Run("Given invalid request it return 400", func(t *testing.T) {
 
@@ -52,7 +53,9 @@ func TestHandler_Create(t *testing.T) {
 
 		id, name, duration := "invalid-id", "Course Name", "3 months"
 
-		courseService.On("Create", mock.Anything, id, name, duration).Return(nil, mooc.ErrInvalidCourseID)
+		bus.On("Dispatch", mock.Anything, course.NewCreateCourseCommand(
+			id, name, duration,
+		)).Return(nil, mooc.ErrInvalidCourseID)
 
 		createRequest := &courses.CreateRequest{
 			ID:       id,
@@ -80,9 +83,11 @@ func TestHandler_Create(t *testing.T) {
 	t.Run("Given valid request it return 201", func(t *testing.T) {
 
 		id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "Course Name", "3 months"
-		course, err := mooc.NewCourse(id, name, duration)
+		newCource, err := mooc.NewCourse(id, name, duration)
 		require.NoError(t, err)
-		courseService.On("Create", mock.Anything, id, name, duration).Return(course, nil)
+		bus.On("Dispatch", mock.Anything, course.NewCreateCourseCommand(
+			id, name, duration,
+		)).Return(newCource, nil)
 		createRequest := &courses.CreateRequest{
 			ID:       id,
 			Name:     name,

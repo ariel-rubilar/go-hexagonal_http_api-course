@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/test/mocks"
@@ -19,15 +20,15 @@ import (
 
 func TestHandler_List(t *testing.T) {
 
-	courseService := new(mocks.CourseServiceMock)
+	bus := new(mocks.BuseMock)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.GET("/courses", courses.ListHandler(courseService))
+	r.GET("/courses", courses.ListHandler(bus))
 
 	t.Run("return 200", func(t *testing.T) {
 
-		courseService.On("ListAll", mock.Anything).Return(nil, nil).Once()
+		bus.On("Dispatch", mock.Anything, course.NewListCoursesCommand()).Return(make([]*mooc.Course, 0), nil).Once()
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 
@@ -45,15 +46,15 @@ func TestHandler_List(t *testing.T) {
 	t.Run("return courses", func(t *testing.T) {
 
 		coursesModel := make([]*mooc.Course, 1)
-		course, err := mooc.NewCourse(
+		course1, err := mooc.NewCourse(
 			"123e4567-e89b-12d3-a456-426614174000",
 			"Course Name",
 			"3 months",
 		)
 		require.NoError(t, err)
-		coursesModel[0] = course
+		coursesModel[0] = course1
 
-		courseService.On("ListAll", mock.Anything).Return(coursesModel, nil)
+		bus.On("Dispatch", mock.Anything, course.NewListCoursesCommand()).Return(coursesModel, nil)
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 

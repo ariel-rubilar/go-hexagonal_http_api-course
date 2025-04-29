@@ -6,6 +6,7 @@ import (
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/command"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,13 +19,15 @@ type api struct {
 	engine   *gin.Engine
 
 	courseService course.CourseService
+	bus           command.Bus
 }
 
-func New(host string, port int, s course.CourseService) Server {
+func New(host string, port int, s course.CourseService, b command.Bus) Server {
 	api := &api{
 		httpAddr:      fmt.Sprintf("%s:%d", host, port),
 		engine:        gin.New(),
 		courseService: s,
+		bus:           b,
 	}
 
 	api.registerRoutes()
@@ -39,6 +42,6 @@ func (a *api) Run() error {
 func (a *api) registerRoutes() {
 
 	a.engine.GET("/health", health.CheckHandler())
-	a.engine.POST("/courses", courses.CreateHandler(a.courseService))
-	a.engine.GET("/courses", courses.ListHandler(a.courseService))
+	a.engine.POST("/courses", courses.CreateHandler(a.bus))
+	a.engine.GET("/courses", courses.ListHandler(a.bus))
 }

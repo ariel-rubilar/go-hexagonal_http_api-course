@@ -18,11 +18,12 @@ func TestCommandBus_Dispatch_Success(t *testing.T) {
 	cmd.On("Type").Return(command.Type("test_command"))
 	handler := new(mocks.HandlerMock)
 
-	handler.On("Handle", ctx, cmd).Return(nil)
+	handler.On("Handle", ctx, cmd).Return("result", nil)
 
 	bus.Register(cmd.Type(), handler)
 
-	err := bus.Dispatch(ctx, cmd)
+	r, err := bus.Dispatch(ctx, cmd)
+	assert.Equal(t, "result", r)
 
 	assert.NoError(t, err)
 	handler.AssertExpectations(t)
@@ -37,11 +38,13 @@ func TestCommandBus_Dispatch_Fail(t *testing.T) {
 	cmd.On("Type").Return(command.Type("test_command"))
 	handler := new(mocks.HandlerMock)
 
-	handler.On("Handle", ctx, cmd).Return(assert.AnError)
+	handler.On("Handle", ctx, cmd).Return(nil, assert.AnError)
 
 	bus.Register(cmd.Type(), handler)
 
-	err := bus.Dispatch(ctx, cmd)
+	r, err := bus.Dispatch(ctx, cmd)
+
+	assert.Nil(t, r)
 
 	assert.Error(t, err)
 	handler.AssertExpectations(t)
@@ -58,7 +61,7 @@ func TestCommandBus_Dispatch_Handler_Not_Found(t *testing.T) {
 
 	bus.Register(command.Type("test_command_2"), handler)
 
-	err := bus.Dispatch(ctx, cmd)
+	_, err := bus.Dispatch(ctx, cmd)
 
 	assert.NoError(t, err)
 	handler.AssertNotCalled(t, "Handle", ctx, cmd)
