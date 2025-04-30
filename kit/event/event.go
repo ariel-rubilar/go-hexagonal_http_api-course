@@ -3,6 +3,8 @@ package event
 import (
 	"context"
 	"time"
+
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/uuid"
 )
 
 type Type string
@@ -20,11 +22,11 @@ type BaseEvent struct {
 	occurredOn  time.Time
 }
 
-func NewBaseEvent(id, aggregateID string, occurredOn time.Time) BaseEvent {
+func NewBaseEvent(aggregateID string) BaseEvent {
 	return BaseEvent{
-		id:          id,
+		id:          uuid.New().String(),
 		aggregateID: aggregateID,
-		occurredOn:  occurredOn,
+		occurredOn:  time.Now(),
 	}
 }
 
