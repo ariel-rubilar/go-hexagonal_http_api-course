@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
@@ -20,7 +21,7 @@ type api struct {
 	bus command.Bus
 }
 
-func New(host string, port int, b command.Bus) Server {
+func New(ctx context.Context, host string, port int, b command.Bus) Server {
 	api := &api{
 		httpAddr: fmt.Sprintf("%s:%d", host, port),
 		engine:   gin.New(),

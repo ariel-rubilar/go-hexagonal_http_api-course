@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
@@ -32,6 +33,6 @@ func Run() error {
 	commandBus.Register(creating.CreateCourseCommandType, creating.NewCreateCommandHandler(createService))
 	commandBus.Register(fetching.ListCoursesCommandType, fetching.NewListCommandHandler(fetchingService))
 
-	srv := server.New(host, port, commandBus)
+	srv := server.New(context.Background(), host, port, commandBus)
 	return srv.Run()
 }
