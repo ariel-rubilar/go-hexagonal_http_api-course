@@ -6,6 +6,7 @@ import (
 
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/fetching"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/bus/inmemory"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb/course"
@@ -14,7 +15,7 @@ import (
 
 const (
 	host = "localhost"
-	port = 8080
+	port = 8082
 )
 
 func Run() error {
@@ -24,6 +25,8 @@ func Run() error {
 	}
 	courseRepository := course.NewCourseRepository(db)
 	eventBus := inmemory.NewEventBus()
+
+	eventBus.Subscribe(mooc.CreatedCourseEventType, creating.NewLogOnCourseCreated())
 
 	fetchingService := fetching.NewFetchingService(courseRepository)
 
