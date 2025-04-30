@@ -11,7 +11,7 @@ import (
 )
 
 type Server interface {
-	Run() error
+	Run(context.Context) error
 }
 
 type api struct {
@@ -21,7 +21,7 @@ type api struct {
 	bus command.Bus
 }
 
-func New(ctx context.Context, host string, port int, b command.Bus) Server {
+func New(ctx context.Context, host string, port int, b command.Bus) (context.Context, Server) {
 	api := &api{
 		httpAddr: fmt.Sprintf("%s:%d", host, port),
 		engine:   gin.New(),
@@ -29,10 +29,11 @@ func New(ctx context.Context, host string, port int, b command.Bus) Server {
 	}
 
 	api.registerRoutes()
-	return api
+
+	return ctx, api
 }
 
-func (a *api) Run() error {
+func (a *api) Run(ctx context.Context) error {
 	fmt.Println("Starting server on", a.httpAddr)
 	return a.engine.Run(a.httpAddr)
 }

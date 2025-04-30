@@ -33,6 +33,6 @@ func Run() error {
 	commandBus.Register(creating.CreateCourseCommandType, creating.NewCreateCommandHandler(createService))
 	commandBus.Register(fetching.ListCoursesCommandType, fetching.NewListCommandHandler(fetchingService))
 
-	srv := server.New(context.Background(), host, port, commandBus)
-	return srv.Run()
+	ctx, srv := server.New(context.Background(), host, port, commandBus)
+	return srv.Run(ctx)
 }
