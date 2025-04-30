@@ -12,7 +12,7 @@ type CommandBus struct {
 
 var _ command.Bus = (*CommandBus)(nil)
 
-func NewCommand() *CommandBus {
+func NewCommandBus() *CommandBus {
 	return &CommandBus{
 		handlers: make(map[command.Type]command.Handler),
 	}

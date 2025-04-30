@@ -11,7 +11,7 @@ import (
 )
 
 func TestCommandBus_Dispatch_Success(t *testing.T) {
-	bus := inmemory.NewCommand()
+	bus := inmemory.NewCommandBus()
 	ctx := context.Background()
 
 	cmd := new(mocks.CommandMock)
@@ -31,7 +31,7 @@ func TestCommandBus_Dispatch_Success(t *testing.T) {
 }
 
 func TestCommandBus_Dispatch_Fail(t *testing.T) {
-	bus := inmemory.NewCommand()
+	bus := inmemory.NewCommandBus()
 	ctx := context.Background()
 
 	cmd := new(mocks.CommandMock)
@@ -52,7 +52,7 @@ func TestCommandBus_Dispatch_Fail(t *testing.T) {
 }
 
 func TestCommandBus_Dispatch_Handler_Not_Found(t *testing.T) {
-	bus := inmemory.NewCommand()
+	bus := inmemory.NewCommandBus()
 	ctx := context.Background()
 
 	cmd := new(mocks.CommandMock)
