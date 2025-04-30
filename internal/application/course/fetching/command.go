@@ -24,10 +24,10 @@ func (c *ListCoursesCommand) Type() command.Type {
 }
 
 type ListCoursesCommandHandler struct {
-	courseService CourseListAll
+	courseService FetchingService
 }
 
-func NewListCoursesCommandHandler(courseService CourseListAll) *ListCoursesCommandHandler {
+func NewListCoursesCommandHandler(courseService FetchingService) *ListCoursesCommandHandler {
 	return &ListCoursesCommandHandler{
 		courseService: courseService,
 	}

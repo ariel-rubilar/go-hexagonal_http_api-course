@@ -12,7 +12,7 @@ type CourseServiceMock struct {
 	mock.Mock
 }
 
-var _ creating.CourseService = (*CourseServiceMock)(nil)
+var _ creating.CreatingService = (*CourseServiceMock)(nil)
 
 func (m *CourseServiceMock) Create(ctx context.Context, id, name, duration string) (*mooc.Course, error) {
 	args := m.Called(ctx, id, name, duration)

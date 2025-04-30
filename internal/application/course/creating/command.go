@@ -12,36 +12,36 @@ var (
 	CreateCourseCommandType = command.Type("command.create.course")
 )
 
-type CreateCourseCommand struct {
+type CreateCommand struct {
 	name     string
 	id       string
 	duration string
 }
 
-func NewCreateCourseCommand(id, name, duration string) *CreateCourseCommand {
-	return &CreateCourseCommand{
+func NewCreateCommand(id, name, duration string) *CreateCommand {
+	return &CreateCommand{
 		name:     name,
 		id:       id,
 		duration: duration,
 	}
 }
 
-func (c *CreateCourseCommand) Type() command.Type {
+func (c *CreateCommand) Type() command.Type {
 	return CreateCourseCommandType
 }
 
 type CreateCourseCommandHandler struct {
-	courseService CourseCreate
+	courseService CreatingService
 }
 
-func NewCreateCourseCommandHandler(courseService CourseCreate) *CreateCourseCommandHandler {
+func NewCreateCommandHandler(courseService CreatingService) *CreateCourseCommandHandler {
 	return &CreateCourseCommandHandler{
 		courseService: courseService,
 	}
 }
 
 func (h *CreateCourseCommandHandler) Handle(ctx context.Context, cmd command.Command) (any, error) {
-	courseCmd, ok := cmd.(*CreateCourseCommand)
+	courseCmd, ok := cmd.(*CreateCommand)
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("invalid command type: %T", cmd))
 	}

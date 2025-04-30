@@ -25,7 +25,7 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 			return
 		}
 
-		r, err := commandBus.Dispatch(ctx, creating.NewCreateCourseCommand(req.ID, req.Name, req.Duration))
+		r, err := commandBus.Dispatch(ctx, creating.NewCreateCommand(req.ID, req.Name, req.Duration))
 
 		c, ok := r.(*mooc.Course)
 

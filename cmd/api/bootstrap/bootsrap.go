@@ -29,7 +29,7 @@ func Run() error {
 
 	commandBus := inmemory.New()
 
-	commandBus.Register(creating.CreateCourseCommandType, creating.NewCreateCourseCommandHandler(createService))
+	commandBus.Register(creating.CreateCourseCommandType, creating.NewCreateCommandHandler(createService))
 	commandBus.Register(fetching.ListCoursesCommandType, fetching.NewListCoursesCommandHandler(courseService))
 
 	srv := server.New(host, port, commandBus)

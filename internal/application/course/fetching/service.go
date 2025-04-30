@@ -6,19 +6,13 @@ import (
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 )
 
-type CourseListAll interface {
+type FetchingService interface {
 	ListAll(ctx context.Context) ([]*mooc.Course, error)
-}
-
-type CourseService interface {
-	CourseListAll
 }
 
 type courseService struct {
 	courseRepository mooc.CourseRepository
 }
-
-var _ CourseService = (*courseService)(nil)
 
 func NewCourseService(courseRepository mooc.CourseRepository) *courseService {
 	return &courseService{
