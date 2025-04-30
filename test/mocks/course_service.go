@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/stretchr/testify/mock"
 )
@@ -12,7 +12,7 @@ type CourseServiceMock struct {
 	mock.Mock
 }
 
-var _ course.CourseService = (*CourseServiceMock)(nil)
+var _ creating.CourseService = (*CourseServiceMock)(nil)
 
 func (m *CourseServiceMock) Create(ctx context.Context, id, name, duration string) (*mooc.Course, error) {
 	args := m.Called(ctx, id, name, duration)
