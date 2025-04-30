@@ -10,17 +10,17 @@ type FetchingService interface {
 	ListAll(ctx context.Context) ([]*mooc.Course, error)
 }
 
-type courseService struct {
+type fetchingService struct {
 	courseRepository mooc.CourseRepository
 }
 
-func NewCourseService(courseRepository mooc.CourseRepository) *courseService {
-	return &courseService{
+func NewFetchingService(courseRepository mooc.CourseRepository) *fetchingService {
+	return &fetchingService{
 		courseRepository: courseRepository,
 	}
 }
 
-func (s *courseService) ListAll(ctx context.Context) ([]*mooc.Course, error) {
+func (s *fetchingService) ListAll(ctx context.Context) ([]*mooc.Course, error) {
 	courses, err := s.courseRepository.ListAll(ctx)
 	if err != nil {
 		return nil, err

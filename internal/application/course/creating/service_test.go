@@ -16,7 +16,7 @@ import (
 func TestCourseService_Create_Fail(t *testing.T) {
 
 	mockCourseRepository := new(mocks.CourseRepositoryMock)
-	courseService := creating.NewCourseService(mockCourseRepository)
+	courseService := creating.NewCreatingService(mockCourseRepository)
 
 	t.Run("if course repository fails should return error", func(t *testing.T) {
 
@@ -49,7 +49,7 @@ func TestCourseService_Create_Fail(t *testing.T) {
 func TestCourseService_Create_Success(t *testing.T) {
 
 	mockCourseRepository := new(mocks.CourseRepositoryMock)
-	courseService := creating.NewCourseService(mockCourseRepository)
+	courseService := creating.NewCreatingService(mockCourseRepository)
 
 	id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "Go Programming", "3 months"
 

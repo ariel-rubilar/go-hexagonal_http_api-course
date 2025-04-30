@@ -10,17 +10,17 @@ type CreatingService interface {
 	Create(ctx context.Context, id, name, duration string) (*mooc.Course, error)
 }
 
-type courseService struct {
+type creatingService struct {
 	courseRepository mooc.CourseRepository
 }
 
-func NewCourseService(courseRepository mooc.CourseRepository) *courseService {
-	return &courseService{
+func NewCreatingService(courseRepository mooc.CourseRepository) *creatingService {
+	return &creatingService{
 		courseRepository: courseRepository,
 	}
 }
 
-func (s *courseService) Create(ctx context.Context, id, name, duration string) (*mooc.Course, error) {
+func (s *creatingService) Create(ctx context.Context, id, name, duration string) (*mooc.Course, error) {
 
 	course, err := mooc.NewCourse(id, name, duration)
 
