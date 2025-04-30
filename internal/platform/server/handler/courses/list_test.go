@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/fetching"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/test/mocks"
@@ -28,7 +28,7 @@ func TestHandler_List(t *testing.T) {
 
 	t.Run("return 200", func(t *testing.T) {
 
-		bus.On("Dispatch", mock.Anything, course.NewListCoursesCommand()).Return(make([]*mooc.Course, 0), nil).Once()
+		bus.On("Dispatch", mock.Anything, fetching.NewListCoursesCommand()).Return(make([]*mooc.Course, 0), nil).Once()
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 
@@ -54,7 +54,7 @@ func TestHandler_List(t *testing.T) {
 		require.NoError(t, err)
 		coursesModel[0] = course1
 
-		bus.On("Dispatch", mock.Anything, course.NewListCoursesCommand()).Return(coursesModel, nil)
+		bus.On("Dispatch", mock.Anything, fetching.NewListCoursesCommand()).Return(coursesModel, nil)
 
 		req, err := http.NewRequest(http.MethodGet, "/courses", &bytes.Buffer{})
 

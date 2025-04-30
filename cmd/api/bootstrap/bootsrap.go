@@ -3,10 +3,11 @@ package bootstrap
 import (
 	"fmt"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/fetching"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/bus/inmemory"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb"
-	courseRepo "github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/persistence/memdb/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server"
 )
 
@@ -20,15 +21,17 @@ func Run() error {
 	if err != nil {
 		return fmt.Errorf("error creating memsql: %w", err)
 	}
-	courseRepository := courseRepo.NewCourseRepository(db)
+	courseRepository := course.NewCourseRepository(db)
 
-	courseService := course.NewCourseService(courseRepository)
+	courseService := fetching.NewCourseService(courseRepository)
+
+	createService := creating.NewCourseService(courseRepository)
 
 	commandBus := inmemory.New()
 
-	commandBus.Register(course.CreateCourseCommandType, course.NewCreateCourseCommandHandler(courseService))
-	commandBus.Register(course.ListCoursesCommandType, course.NewListCoursesCommandHandler(courseService))
+	commandBus.Register(creating.CreateCourseCommandType, creating.NewCreateCourseCommandHandler(createService))
+	commandBus.Register(fetching.ListCoursesCommandType, fetching.NewListCoursesCommandHandler(courseService))
 
-	srv := server.New(host, port, courseService, commandBus)
+	srv := server.New(host, port, commandBus)
 	return srv.Run()
 }

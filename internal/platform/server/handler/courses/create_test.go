@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/test/mocks"
@@ -53,7 +53,7 @@ func TestHandler_Create(t *testing.T) {
 
 		id, name, duration := "invalid-id", "Course Name", "3 months"
 
-		bus.On("Dispatch", mock.Anything, course.NewCreateCourseCommand(
+		bus.On("Dispatch", mock.Anything, creating.NewCreateCourseCommand(
 			id, name, duration,
 		)).Return(nil, mooc.ErrInvalidCourseID)
 
@@ -85,7 +85,7 @@ func TestHandler_Create(t *testing.T) {
 		id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "Course Name", "3 months"
 		newCource, err := mooc.NewCourse(id, name, duration)
 		require.NoError(t, err)
-		bus.On("Dispatch", mock.Anything, course.NewCreateCourseCommand(
+		bus.On("Dispatch", mock.Anything, creating.NewCreateCourseCommand(
 			id, name, duration,
 		)).Return(newCource, nil)
 		createRequest := &courses.CreateRequest{

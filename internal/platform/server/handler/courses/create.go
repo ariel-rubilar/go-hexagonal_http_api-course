@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/command"
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 			return
 		}
 
-		r, err := commandBus.Dispatch(ctx, course.NewCreateCourseCommand(req.ID, req.Name, req.Duration))
+		r, err := commandBus.Dispatch(ctx, creating.NewCreateCourseCommand(req.ID, req.Name, req.Duration))
 
 		c, ok := r.(*mooc.Course)
 

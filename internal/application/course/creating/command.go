@@ -1,4 +1,4 @@
-package course
+package creating
 
 import (
 	"context"
@@ -10,7 +10,6 @@ import (
 
 var (
 	CreateCourseCommandType = command.Type("command.create.course")
-	ListCoursesCommandType  = command.Type("command.list.courses")
 )
 
 type CreateCourseCommand struct {
@@ -53,39 +52,4 @@ func (h *CreateCourseCommandHandler) Handle(ctx context.Context, cmd command.Com
 	}
 
 	return c, nil
-}
-
-type ListCoursesCommand struct {
-}
-
-func NewListCoursesCommand() *ListCoursesCommand {
-	return &ListCoursesCommand{}
-}
-
-func (c *ListCoursesCommand) Type() command.Type {
-	return ListCoursesCommandType
-}
-
-type ListCoursesCommandHandler struct {
-	courseService CourseListAll
-}
-
-func NewListCoursesCommandHandler(courseService CourseListAll) *ListCoursesCommandHandler {
-	return &ListCoursesCommandHandler{
-		courseService: courseService,
-	}
-}
-
-func (h *ListCoursesCommandHandler) Handle(ctx context.Context, cmd command.Command) (any, error) {
-	_, ok := cmd.(*ListCoursesCommand)
-	if !ok {
-		return nil, errors.New(fmt.Sprintf("invalid command type: %T", cmd))
-	}
-
-	courses, err := h.courseService.ListAll(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return courses, nil
 }

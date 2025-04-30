@@ -1,4 +1,4 @@
-package course
+package creating
 
 import (
 	"context"
@@ -10,13 +10,8 @@ type CourseCreate interface {
 	Create(ctx context.Context, id, name, duration string) (*mooc.Course, error)
 }
 
-type CourseListAll interface {
-	ListAll(ctx context.Context) ([]*mooc.Course, error)
-}
-
 type CourseService interface {
 	CourseCreate
-	CourseListAll
 }
 
 type courseService struct {
@@ -44,12 +39,4 @@ func (s *courseService) Create(ctx context.Context, id, name, duration string) (
 	}
 
 	return course, nil
-}
-
-func (s *courseService) ListAll(ctx context.Context) ([]*mooc.Course, error) {
-	courses, err := s.courseRepository.ListAll(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return courses, nil
 }

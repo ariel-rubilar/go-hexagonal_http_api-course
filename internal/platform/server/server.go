@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/courses"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/platform/server/handler/health"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/command"
@@ -18,16 +17,14 @@ type api struct {
 	httpAddr string
 	engine   *gin.Engine
 
-	courseService course.CourseService
-	bus           command.Bus
+	bus command.Bus
 }
 
-func New(host string, port int, s course.CourseService, b command.Bus) Server {
+func New(host string, port int, b command.Bus) Server {
 	api := &api{
-		httpAddr:      fmt.Sprintf("%s:%d", host, port),
-		engine:        gin.New(),
-		courseService: s,
-		bus:           b,
+		httpAddr: fmt.Sprintf("%s:%d", host, port),
+		engine:   gin.New(),
+		bus:      b,
 	}
 
 	api.registerRoutes()

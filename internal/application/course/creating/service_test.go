@@ -1,11 +1,11 @@
-package course_test
+package creating_test
 
 import (
 	"context"
 	"errors"
 	"testing"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/creating"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/test/mocks"
 	"github.com/stretchr/testify/assert"
@@ -16,7 +16,7 @@ import (
 func TestCourseService_Create_Fail(t *testing.T) {
 
 	mockCourseRepository := new(mocks.CourseRepositoryMock)
-	courseService := course.NewCourseService(mockCourseRepository)
+	courseService := creating.NewCourseService(mockCourseRepository)
 
 	t.Run("if course repository fails should return error", func(t *testing.T) {
 
@@ -49,7 +49,7 @@ func TestCourseService_Create_Fail(t *testing.T) {
 func TestCourseService_Create_Success(t *testing.T) {
 
 	mockCourseRepository := new(mocks.CourseRepositoryMock)
-	courseService := course.NewCourseService(mockCourseRepository)
+	courseService := creating.NewCourseService(mockCourseRepository)
 
 	id, name, duration := "123e4567-e89b-12d3-a456-426614174000", "Go Programming", "3 months"
 

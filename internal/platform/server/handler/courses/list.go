@@ -3,7 +3,7 @@ package courses
 import (
 	"net/http"
 
-	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course"
+	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/application/course/fetching"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/internal/domain/mooc"
 	"github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/command"
 	"github.com/gin-gonic/gin"
@@ -23,7 +23,7 @@ type ListResponse struct {
 func ListHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		r, err := commandBus.Dispatch(ctx, course.NewListCoursesCommand())
+		r, err := commandBus.Dispatch(ctx, fetching.NewListCoursesCommand())
 
 		courses, ok := r.([]*mooc.Course)
 
