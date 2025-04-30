@@ -1,9 +1,12 @@
 package mooc
 
+import "github.com/ariel-rubilar/go-hexagonal_http_api-course/kit/event"
+
 type Course struct {
 	id       CourseID
 	name     CourseName
 	duration CourseDuration
+	events   []event.Event
 }
 
 func NewCourse(id, name, duration string) (*Course, error) {
@@ -25,11 +28,15 @@ func NewCourse(id, name, duration string) (*Course, error) {
 		return nil, err
 	}
 
-	return &Course{
+	course := &Course{
 		id:       courseID,
 		name:     courseName,
 		duration: courseDuration,
-	}, nil
+	}
+
+	course.RecordEvent(NewCreatedEvent(courseID.String(), courseName.String(), courseDuration.String()))
+
+	return course, nil
 }
 
 func (c *Course) ID() CourseID {
@@ -42,4 +49,14 @@ func (c *Course) Name() CourseName {
 
 func (c *Course) Duration() CourseDuration {
 	return c.duration
+}
+
+func (c *Course) PullEvents() []event.Event {
+	events := c.events
+	c.events = []event.Event{}
+	return events
+}
+
+func (c *Course) RecordEvent(e event.Event) {
+	c.events = append(c.events, e)
 }

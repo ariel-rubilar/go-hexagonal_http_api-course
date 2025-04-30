@@ -23,10 +23,11 @@ func Run() error {
 		return fmt.Errorf("error creating memsql: %w", err)
 	}
 	courseRepository := course.NewCourseRepository(db)
+	eventBus := inmemory.NewEventBus()
 
 	fetchingService := fetching.NewFetchingService(courseRepository)
 
-	createService := creating.NewCreatingService(courseRepository)
+	createService := creating.NewCreatingService(courseRepository, eventBus)
 
 	commandBus := inmemory.NewCommandBus()
 
@@ -34,5 +35,6 @@ func Run() error {
 	commandBus.Register(fetching.ListCoursesCommandType, fetching.NewListCommandHandler(fetchingService))
 
 	ctx, srv := server.New(context.Background(), host, port, commandBus)
+
 	return srv.Run(ctx)
 }
