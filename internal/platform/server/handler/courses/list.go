@@ -23,7 +23,7 @@ type ListResponse struct {
 func ListHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		r, err := commandBus.Dispatch(ctx, fetching.NewListCoursesCommand())
+		r, err := commandBus.Dispatch(ctx, fetching.NewListCommand())
 
 		courses, ok := r.([]*mooc.Course)
 

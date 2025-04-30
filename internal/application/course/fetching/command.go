@@ -12,29 +12,29 @@ var (
 	ListCoursesCommandType = command.Type("command.list.courses")
 )
 
-type ListCoursesCommand struct {
+type ListCommand struct {
 }
 
-func NewListCoursesCommand() *ListCoursesCommand {
-	return &ListCoursesCommand{}
+func NewListCommand() *ListCommand {
+	return &ListCommand{}
 }
 
-func (c *ListCoursesCommand) Type() command.Type {
+func (c *ListCommand) Type() command.Type {
 	return ListCoursesCommandType
 }
 
-type ListCoursesCommandHandler struct {
+type ListCommandHandler struct {
 	courseService FetchingService
 }
 
-func NewListCoursesCommandHandler(courseService FetchingService) *ListCoursesCommandHandler {
-	return &ListCoursesCommandHandler{
+func NewListCommandHandler(courseService FetchingService) *ListCommandHandler {
+	return &ListCommandHandler{
 		courseService: courseService,
 	}
 }
 
-func (h *ListCoursesCommandHandler) Handle(ctx context.Context, cmd command.Command) (any, error) {
-	_, ok := cmd.(*ListCoursesCommand)
+func (h *ListCommandHandler) Handle(ctx context.Context, cmd command.Command) (any, error) {
+	_, ok := cmd.(*ListCommand)
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("invalid command type: %T", cmd))
 	}
