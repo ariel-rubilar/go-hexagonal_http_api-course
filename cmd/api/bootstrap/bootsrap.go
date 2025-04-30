@@ -28,7 +28,7 @@ func Run() error {
 
 	createService := creating.NewCreatingService(courseRepository)
 
-	commandBus := inmemory.New()
+	commandBus := inmemory.NewCommand()
 
 	commandBus.Register(creating.CreateCourseCommandType, creating.NewCreateCommandHandler(createService))
 	commandBus.Register(fetching.ListCoursesCommandType, fetching.NewListCommandHandler(fetchingService))
