@@ -29,7 +29,7 @@ type api struct {
 func New(ctx context.Context, host string, port int, b command.Bus) (context.Context, Server) {
 	api := &api{
 		httpAddr: fmt.Sprintf("%s:%d", host, port),
-		engine:   gin.New(),
+		engine:   gin.Default(),
 		bus:      b,
 	}
 
